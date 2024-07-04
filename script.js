@@ -1,42 +1,46 @@
-const dictionary = {
-  car: "araba",
-  pen: "kalem",
-  mouse: "fare",
-  water: "su",
-  hand: "el",
-};
-
-const wordsEN = Object.keys(dictionary);
-const wordsTR = Object.values(dictionary);
-
 const displayEN = document.getElementById("wordText");
 const displayTR = document.getElementById("answerText");
 
-function showWord() {
-  const random = Math.floor(Math.random() * wordsEN.length);
+const newEN = document.getElementById("key");
+const newTR = document.getElementById("value");
+const addWord = document.getElementById("newWords");
 
-  const randomEN = wordsEN[random];
-  const randomTR = wordsTR[random];
+const yesButton = document.getElementById("yes");
+const notButton = document.getElementById("not");
 
-  displayEN.innerHTML = randomEN.toUpperCase();
+// Storage
 
-  displayTR.addEventListener("click", function () {
-    displayTR.innerHTML = randomTR.toUpperCase();
-  });
+addWord.addEventListener("click", newWord);
 
-  console.log(random);
+function newWord() {
+  key = newEN.value.trim();
+  value = newTR.value.trim();
+
+  localStorage.setItem(key, value);
+
+  newEN.value = "";
+  newTR.value = "";
 }
 
-const yes = document.getElementById("yes");
-const not = document.getElementById("not");
+// Display
 
-yes.addEventListener("click", function () {
-  displayTR.innerHTML = "Show Answer";
-  showWord();
-});
-not.addEventListener("click", function () {
-  displayTR.innerHTML = "Show Answer";
-  showWord();
-});
+function randomWord() {
+  const random = Math.floor(Math.random() * localStorage.length);
+  const randomKey = localStorage.key(random);
+  const word = localStorage.getItem(randomKey);
 
-showWord();
+  displayEN.innerHTML = randomKey.toUpperCase();
+
+  displayTR.addEventListener("click", function () {
+    displayTR.innerHTML = word.toUpperCase();
+  });
+
+  displayTR.innerHTML = "Show Answer";
+}
+
+// Change Word
+
+yesButton.addEventListener("click", randomWord);
+notButton.addEventListener("click", randomWord);
+
+randomWord();
